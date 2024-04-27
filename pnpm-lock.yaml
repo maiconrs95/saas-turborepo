@@ -14,12 +14,12 @@ importers:
 
   configs/eslint-config:
     devDependencies:
-      '@rmoover/prettier':
-        specifier: workspace:*
-        version: link:../prettier
       '@rocketseat/eslint-config':
         specifier: ^2.2.2
         version: 2.2.2(eslint@8.57.0)(typescript@5.4.5)
+      '@saas/prettier':
+        specifier: workspace:*
+        version: link:../prettier
       eslint-plugin-simple-import-sort:
         specifier: ^12.1.0
         version: 12.1.0(eslint@8.57.0)
