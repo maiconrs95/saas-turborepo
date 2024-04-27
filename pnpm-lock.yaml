@@ -35,6 +35,18 @@ importers:
 
   configs/typescript-config: {}
 
+  packages/auth:
+    devDependencies:
+      '@saas/eslint-config':
+        specifier: workspace:*
+        version: link:../../configs/eslint-config
+      '@saas/prettier':
+        specifier: workspace:*
+        version: link:../../configs/prettier
+      '@saas/tsconfig':
+        specifier: workspace:*
+        version: link:../../configs/typescript-config
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
