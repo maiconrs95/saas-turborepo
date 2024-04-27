@@ -10,16 +10,25 @@ type PermissionByRole = (
 ) => void
 
 export const permissions: Record<Role, PermissionByRole> = {
-  ADMIN(_, builder) {
+  ADMIN(user, builder) {
     builder.can('manage', 'all')
+    builder.cannot(['transfer_ownership', 'update'], 'Organization')
+    builder.can(['transfer_ownership', 'update'], 'Organization', {
+      ownerId: {
+        $eq: user.id,
+      },
+    })
   },
   MEMBER(user, builder) {
-    builder.can(['create', 'get'], 'Project')
+    builder.can('get', 'User')
+    builder.can(['get', 'update'], 'Project')
     builder.can(['update', 'delete'], 'Project', {
       ownerId: {
         $eq: user.id,
       },
     })
   },
-  BILLING() {},
+  BILLING(_, builder) {
+    builder.can('manage', 'Billing')
+  },
 }

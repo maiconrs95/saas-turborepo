@@ -6,4 +6,4 @@ export const projectSchema = z.object({
   ownerId: z.string(),
 })
 
-export type User = z.infer<typeof projectSchema>
+export type Project = z.infer<typeof projectSchema>

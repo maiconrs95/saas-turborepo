@@ -6,4 +6,4 @@ export const organizationSchema = z.object({
   ownerId: z.string(),
 })
 
-export type User = z.infer<typeof organizationSchema>
+export type Organization = z.infer<typeof organizationSchema>
