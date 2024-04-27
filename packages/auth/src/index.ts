@@ -7,10 +7,10 @@ import {
 
 import { User } from './models/user'
 import { permissions } from './permissions'
-import { ProductSubject } from './subjects/project'
+import { ProjectSubject } from './subjects/project'
 import { UserSubject } from './subjects/user'
 
-type AppAbilities = UserSubject | ProductSubject | ['manage', 'all']
+type AppAbilities = UserSubject | ProjectSubject | ['manage', 'all']
 
 export type AppAbility = MongoAbility<AppAbilities>
 export const createAppAbility = createMongoAbility as CreateAbility<AppAbility>
