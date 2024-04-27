@@ -1,11 +1,10 @@
 import { z } from 'zod'
 
-import { Role, roleSchmema } from '../roles'
+import { roleSchmema } from '../roles'
 
 export const userSchema = z.object({
+  id: z.string(),
   role: roleSchmema,
 })
 
-export type User = {
-  role: Role
-}
+export type User = z.infer<typeof userSchema>
