@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "tsx watch src/index.ts"
   },
+  "dependencies": {
+    "@saas/auth": "workspace:*"
+  },
   "devDependencies": {
     "@saas/eslint-config": "workspace:*",
     "@saas/prettier": "workspace:*",

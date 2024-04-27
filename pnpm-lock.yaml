@@ -13,6 +13,10 @@ importers:
         version: 1.13.2
 
   apps/api:
+    dependencies:
+      '@saas/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
     devDependencies:
       '@saas/eslint-config':
         specifier: workspace:*
