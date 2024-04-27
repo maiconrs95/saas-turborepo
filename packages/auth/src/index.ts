@@ -8,6 +8,7 @@ import { z } from 'zod'
 
 import { User } from './models/user'
 import { permissions } from './permissions'
+import { Role } from './roles'
 import { billingubject } from './subjects/billing'
 import { inviteSubject } from './subjects/invite'
 import { organizationSubject } from './subjects/organization'
@@ -35,11 +36,22 @@ export const createAppAbility = createMongoAbility as CreateAbility<AppAbility>
 export function definyAbilityFor(user: User) {
   const builder = new AbilityBuilder(createAppAbility)
 
-  if (typeof permissions[user.role] !== 'function') {
-    throw new Error(`Permissions by role ${user.role} not found.`)
+  const build = (role: Role) => {
+    if (typeof permissions[role] !== 'function') {
+      throw new Error(`Permissions for role ${role} not found`)
+    }
+    return permissions[role](user, builder)
   }
 
-  permissions[user.role](user, builder)
+  if (typeof user.role === 'string') {
+    build(user.role)
+  }
+
+  if (Array.isArray(user.role)) {
+    for (const role of user.role) {
+      build(role)
+    }
+  }
 
   const ability = builder.build({
     detectSubjectType(subject) {
