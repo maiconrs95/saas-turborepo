@@ -12,3 +12,142 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum TokenType {
+  PASSWORD_RECOVER
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  BILLING
+}
+
+enum AccountProvider {
+  GITHUB
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name         String?
+  email        String  @unique
+  passwordHash String? @map("password_hash")
+  avatarURL    String? @map("avatar_url")
+
+  tokens            Token[]
+  accounts          Account[]
+  invites           Invite[]
+  member_on         Member[]
+  owns_organization Organization[]
+  owns_projects     Project[]
+
+  @@map("users")
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  type TokenType
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  provider          AccountProvider
+  providerAccountId String          @unique @map("provider_account_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@unique([provider, userId])
+  @@map("accounts")
+}
+
+model Invite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  email  String
+  author User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  role Role
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @map("organization_id")
+
+  @@unique([email, organizationId])
+  @@index([email])
+  @@map("invites")
+}
+
+model Member {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  role Role @default(MEMBER)
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@unique([organizationId, userId])
+  @@map("members")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name                      String
+  slug                      String  @unique
+  domain                    String? @unique
+  shouldAttachUsersByDomain Boolean @default(false) @map("should_attach_users_by_domain")
+  avatarURL                 String? @map("avatar_url")
+
+  owner  User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  invites  Invite[]
+  members  Member[]
+  projects Project[]
+
+  @@map("organizations")
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name        String
+  description String?
+  slug        String  @unique
+  avatarURL   String? @map("avatar_url")
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  owner  User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("projects")
+}
