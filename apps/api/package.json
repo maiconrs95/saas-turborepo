@@ -17,6 +17,7 @@
     "@saas/prettier": "workspace:*",
     "@saas/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
+    "prisma": "^5.19.1",
     "tsx": "^4.7.3"
   },
   "eslintConfig": {
