@@ -5,11 +5,13 @@ import { z } from 'zod'
 
 import { prisma } from '@/lib/prisma'
 
-export async function createAccount(app: FastifyInstance) {
+export async function signup(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/users',
     {
       schema: {
+        tags: ['auth'],
+        summary: 'Create new account',
         body: z.object({
           name: z.string(),
           email: z.string().email(),
