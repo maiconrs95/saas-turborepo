@@ -135,7 +135,7 @@ async function seed() {
 
   await prisma.organization.create({
     data: {
-      name: 'Acme Inc (Member)',
+      name: 'Acme Inc (Billing)',
       slug: 'acme_billing',
       avatarURL:
         'https://www.maiconsilva.com/static/c9c8709b70c68c3e35b5c4494216545c/b2712/profile.jpg',

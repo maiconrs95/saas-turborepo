@@ -1,9 +1,11 @@
 import FastifyCors from '@fastify/cors'
-import Swagger from '@fastify/swagger'
-import SwaggerUI from '@fastify/swagger-ui'
+import FastifyJWT from '@fastify/jwt'
+import FastifySwagger from '@fastify/swagger'
+import FastifySwaggerUI from '@fastify/swagger-ui'
 import { fastify } from 'fastify'
 import * as ZodProvider from 'fastify-type-provider-zod'
 
+import { signin } from './routes/auth/auth-with-password'
 import { signup } from './routes/auth/create-account'
 
 const app = fastify().withTypeProvider<ZodProvider.ZodTypeProvider>()
@@ -11,7 +13,7 @@ const app = fastify().withTypeProvider<ZodProvider.ZodTypeProvider>()
 app.setSerializerCompiler(ZodProvider.serializerCompiler)
 app.setValidatorCompiler(ZodProvider.validatorCompiler)
 
-app.register(Swagger, {
+app.register(FastifySwagger, {
   openapi: {
     info: {
       title: 'nextjs-saas-rbac',
@@ -23,12 +25,16 @@ app.register(Swagger, {
   },
   transform: ZodProvider.jsonSchemaTransform,
 })
-app.register(SwaggerUI, {
+app.register(FastifySwaggerUI, {
   routePrefix: '/docs',
+})
+app.register(FastifyJWT, {
+  secret: 'my-secret',
 })
 
 app.register(FastifyCors)
 app.register(signup)
+app.register(signin)
 
 app.listen({ port: 3333 }).then(() => {
   console.log('Server is running on port 3333')

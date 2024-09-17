@@ -7,11 +7,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function signup(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/users',
+    '/signup',
     {
       schema: {
         tags: ['auth'],
-        summary: 'Create new account',
+        summary: 'Sing up and create a new account',
         body: z.object({
           name: z.string(),
           email: z.string().email(),
@@ -29,11 +29,28 @@ export async function signup(app: FastifyInstance) {
         return rep.status(400).send({ message: 'Email already in use' })
       }
 
+      const domain = email.split('@')[1]
+
+      const autoJointOrganization = await prisma.organization.findFirst({
+        where: {
+          domain,
+          shouldAttachUsersByDomain: true,
+        },
+      })
+
       const user = await prisma.user.create({
         data: {
           name,
           email,
           passwordHash: await hash(password, 6),
+          member_on: autoJointOrganization
+            ? {
+                create: {
+                  organizationId: autoJointOrganization.id,
+                  role: 'MEMBER',
+                },
+              }
+            : undefined,
         },
       })
 
