@@ -8,11 +8,14 @@ import * as ZodProvider from 'fastify-type-provider-zod'
 import { signin } from './routes/auth/auth-with-password'
 import { signup } from './routes/auth/create-account'
 import { getProfile } from './routes/auth/get-profile'
+import { errorHandler } from './routes/error-handler.error'
 
 const app = fastify().withTypeProvider<ZodProvider.ZodTypeProvider>()
 
 app.setSerializerCompiler(ZodProvider.serializerCompiler)
 app.setValidatorCompiler(ZodProvider.validatorCompiler)
+
+app.setErrorHandler(errorHandler)
 
 app.register(FastifySwagger, {
   openapi: {
