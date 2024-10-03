@@ -8,6 +8,8 @@ import * as ZodProvider from 'fastify-type-provider-zod'
 import { signin } from './routes/auth/auth-with-password'
 import { signup } from './routes/auth/create-account'
 import { getProfile } from './routes/auth/get-profile'
+import { requestPasswordRecover } from './routes/auth/request-password-recover'
+import { resetPassword } from './routes/auth/reset-password'
 import { errorHandler } from './routes/error-handler.error'
 
 const app = fastify().withTypeProvider<ZodProvider.ZodTypeProvider>()
@@ -40,6 +42,8 @@ app.register(FastifyCors)
 app.register(signup)
 app.register(signin)
 app.register(getProfile)
+app.register(requestPasswordRecover)
+app.register(resetPassword)
 
 app.listen({ port: 3333 }).then(() => {
   console.log('Server is running on port 3333')
