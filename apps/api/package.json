@@ -3,10 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch src/http/server.ts",
-    "prisma:migrate:dev": " pnpm prisma migrate dev",
-    "prisma:seed:dev": " pnpm prisma db seed",
-    "prisma:studio": "npx prisma studio"
+    "dev": "pnpm env:load -- tsx watch src/http/server.ts",
+    "prisma:migrate:dev": "pnpm env:load -- prisma migrate dev",
+    "prisma:seed:dev": " pnpm env:load -- prisma db seed",
+    "prisma:studio": "pnpm env:load -- prisma studio",
+    "env:load": "pnpm dotenv -e ../../.env"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -25,11 +26,13 @@
     "zod": "^3.23.4"
   },
   "devDependencies": {
+    "@saas/env": "workspace:*",
     "@saas/eslint-config": "workspace:*",
     "@saas/prettier": "workspace:*",
     "@saas/tsconfig": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.12.7",
+    "dotenv-cli": "^7.4.2",
     "prisma": "^5.19.1",
     "tsx": "^4.7.3"
   },

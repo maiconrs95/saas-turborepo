@@ -7,9 +7,9 @@ import { prisma } from '@/lib/prisma'
 
 import BadRequestError from '../_errors/bad-request.error'
 
-export async function signin(app: FastifyInstance) {
+export async function authWithPassword(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/signin/password',
+    '/auth/password',
     {
       schema: {
         tags: ['auth'],
